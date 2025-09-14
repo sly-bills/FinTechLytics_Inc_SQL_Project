@@ -1,0 +1,103 @@
+
+Documentation for the SQL Schema
+
+Below is a detailed documentation of the SQL schema provided, describing the purpose and structure of each table, its fields, and relationships. This schema is designed for FinTech Analytics Inc.
+
+
+ 1. Users Table
+This table stores information about users who interact with the financial platform.
+
+ Fields
+- user_id (SERIAL, Primary Key): A unique identifier for each user, auto-incremented.
+- first_name (VARCHAR(50), NOT NULL): The first name of the user.
+- last_name (VARCHAR(50), NOT NULL): The last name of the user.
+- email (VARCHAR(100), NOT NULL, UNIQUE): The email address of the user, ensuring no duplicates.
+- created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP): The timestamp when the user account was created.
+
+ Purpose
+- This table holds core information about users, which is referenced in the Transactions and Portfolios tables to track user activity and holdings.
+
+
+
+ 2. Stocks Table
+This table contains metadata about stocks available for trading and analysis.
+
+ Fields
+- stock_id (SERIAL, Primary Key): A unique identifier for each stock, auto-incremented.
+- symbol (VARCHAR(10), NOT NULL, UNIQUE): The stock ticker symbol (e.g., AAPL, GOOGL).
+- company_name (VARCHAR(100), NOT NULL): The name of the company associated with the stock.
+- sector (VARCHAR(50)): The sector the stock belongs to (e.g., Technology, Healthcare).
+- listed_on (DATE): The date the stock was listed on the exchange.
+
+ Purpose
+- This table provides essential information about stocks, which is referenced in the StockPrices, Transactions, and Portfolios tables to track stock prices, trades, and holdings.
+
+
+
+ 3. StockPrices Table
+This table stores historical stock price data for analysis and reporting.
+
+ Fields
+- price_id (SERIAL, Primary Key): A unique identifier for each price record, auto-incremented.
+- stock_id (INTEGER, Foreign Key): References the stock_id in the Stocks table.
+- price (DECIMAL(10, 2), NOT NULL): The price of the stock at a given time.
+- timestamp (TIMESTAMP, NOT NULL): The timestamp of the price record.
+
+ Purpose
+- This table tracks historical stock prices, enabling time-series analysis and reporting for clients.
+
+
+
+ 4. Transactions Table
+This table records financial transactions made by users on the platform.
+
+ Fields
+- transaction_id (SERIAL, Primary Key): A unique identifier for each transaction, auto-incremented.
+- user_id (INTEGER, Foreign Key): References the user_id in the Users table.
+- stock_id (INTEGER, Foreign Key): References the stock_id in the Stocks table.
+- transaction_type (VARCHAR(10), NOT NULL): The type of transaction (e.g., BUY, SELL).
+- quantity (INTEGER, NOT NULL): The number of shares traded.
+- price (DECIMAL(10, 2), NOT NULL): The price per share at the time of the transaction.
+- timestamp (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP): The timestamp of the transaction.
+
+ Purpose
+- This table tracks all financial transactions, enabling analysis of trading activity and user behavior.
+
+
+
+ 5. Portfolios Table
+This table stores information about user stock portfolios.
+
+ Fields
+- portfolio_id (SERIAL, Primary Key): A unique identifier for each portfolio entry, auto-incremented.
+- user_id (INTEGER, Foreign Key): References the user_id in the Users table.
+- stock_id (INTEGER, Foreign Key): References the stock_id in the Stocks table.
+- quantity (INTEGER, NOT NULL): The number of shares held in the portfolio.
+- average_price (DECIMAL(10, 2), NOT NULL): The average price paid for the shares.
+
+ Purpose
+- This table tracks user stock holdings, enabling portfolio analysis and performance reporting.
+
+
+
+Relationships
+
+Users and Transactions:
+Primary Key: user_id in Users table.
+Foreign Key: user_id in Transactions table.
+
+Stocks and StockPrices:
+Primary Key: stock_id in Stocks table.
+Foreign Key: stock_id in StockPrices table.
+
+Stocks and Transactions:
+Primary Key: stock_id in Stocks table.
+Foreign Key: stock_id in Transactions table.
+
+Users and Portfolios:
+Primary Key: user_id in Users table.
+Foreign Key: user_id in Portfolios table.
+
+Stocks and Portfolios:
+Primary Key: stock_id in Stocks table.
+Foreign Key: stock_id in Portfolios table.
